@@ -1,0 +1,41 @@
+{
+    "geode": "4.8.0",
+    "gd": {
+        "win": "2.2074",
+        "android": "2.2074",
+        "mac": "2.2074",
+        "ios": "2.2074"
+    },
+    "id": "hiimjasmine00.icon_badges",
+    "name": "Icon Badges",
+    "version": "v1.0.0",
+    "developer": "hiimjasmine00",
+    "description": "Gives badges to icon designers.",
+    "dependencies": {
+        "geode.node-ids": ">=v1.12.0",
+        "jouca.badgesapi": {
+            "version": ">=v1.2.0",
+            "importance": "recommended"
+        },
+        "km7dev.server_api": {
+            "version": ">=v2.0.0",
+            "importance": "suggested"
+        }
+    },
+    "resources": {
+        "sprites": [
+            "resources/*.png"
+        ]
+    },
+    "links": {
+        "community": "https://discord.gg/QVKmbvBXA7",
+        "source": "https://github.com/hiimjasmine00/IconBadges",
+        "homepage": "https://www.hiimjasmine00.com"
+    },
+    "tags": [
+        "enhancement",
+        "interface",
+        "online",
+        "utility"
+    ]
+}
