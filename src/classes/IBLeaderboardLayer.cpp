@@ -88,7 +88,7 @@ bool IBLeaderboardLayer::init() {
     constexpr std::array badgeNames = { "icon", "ship", "ball", "bird", "dart", "robot", "spider", "swing", "jetpack" };
 
     auto badgeMenu = CCMenu::create();
-    badgeMenu->setPosition({ 515.0f, 175.0f });
+    badgeMenu->setPosition(center + CCPoint { 230.0f, 15.0f });
     badgeMenu->setContentSize({ 60.0f, 170.0f });
     badgeMenu->setLayout(ColumnLayout::create()
         ->setGap(8.0f)
