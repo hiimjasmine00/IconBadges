@@ -4,17 +4,6 @@
 
 class IBLeaderboardLayer : public cocos2d::CCLayer {
 protected:
-    inline static std::map<IconType, bool> typesEnabled = {
-        { IconType::Cube, false },
-        { IconType::Ship, false },
-        { IconType::Ball, false },
-        { IconType::Ufo, false },
-        { IconType::Wave, false },
-        { IconType::Robot, false },
-        { IconType::Spider, false },
-        { IconType::Swing, false },
-        { IconType::Jetpack, false }
-    };
     GJListLayer* m_listLayer;
 
     bool init() override;

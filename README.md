@@ -6,10 +6,13 @@ Gives badges to icon designers.
 - A leaderboard in the main menu showing the top icon designers, with filters for different icon types
 
 ## Gallery
-![Badge Popup](https://github.com/hiimjasmine00/IconBadges/blob/main/resources/badge-popup.png)\
-![Badges Popup](https://github.com/hiimjasmine00/IconBadges/blob/main/resources/badges-popup.png)\
-![Icons Popup](https://github.com/hiimjasmine00/IconBadges/blob/main/resources/icons-popup.png)\
-![Icon Leaderboard](https://github.com/hiimjasmine00/IconBadges/blob/main/resources/icon-leaderboard.png)
+![Badge Popup](https://raw.githubusercontent.com/hiimjasmine00/IconBadges/refs/heads/main/resources/badge-popup.png)
+
+![Badges Popup](https://raw.githubusercontent.com/hiimjasmine00/IconBadges/refs/heads/main/resources/badges-popup.png)
+
+![Icons Popup](https://raw.githubusercontent.com/hiimjasmine00/IconBadges/refs/heads/main/resources/icons-popup.png)
+
+![Icon Leaderboard](https://raw.githubusercontent.com/hiimjasmine00/IconBadges/refs/heads/main/resources/icon-leaderboard.png)
 
 ## License
 This mod is licensed under the [MIT License](https://github.com/hiimjasmine00/IconBadges/blob/main/LICENSE).

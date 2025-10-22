@@ -24,7 +24,7 @@ class $modify(IBMenuLayer, MenuLayer) {
     }
 
     void onIconLeaderboard(CCObject*) {
-        if (IconBadges::enabled()) {
+        if (IconBadges::enabled) {
             CCDirector::get()->replaceScene(CCTransitionFade::create(0.5f, IBLeaderboardLayer::scene()));
         }
         else {

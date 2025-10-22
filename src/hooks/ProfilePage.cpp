@@ -13,7 +13,7 @@ class $modify(IBProfilePage, ProfilePage) {
 
     static void onModify(ModifyBase<ModifyDerive<IBProfilePage, ProfilePage>>& self) {
         for (auto& hook : std::views::values(self.m_hooks)) {
-            hook->setAutoEnable(IconBadges::enabled());
+            hook->setAutoEnable(IconBadges::enabled);
         }
     }
 
@@ -38,6 +38,6 @@ class $modify(IBProfilePage, ProfilePage) {
     }
 
     void onIconBadge(CCObject*) {
-        IBBadgePopup::create(m_score, IconBadges::badges[m_score->m_accountID])->show();
+        IBBadgePopup::create(m_score)->show();
     }
 };

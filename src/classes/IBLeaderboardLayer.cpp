@@ -12,6 +12,18 @@
 
 using namespace geode::prelude;
 
+std::map<IconType, bool> typesEnabled = {
+    { IconType::Cube, false },
+    { IconType::Ship, false },
+    { IconType::Ball, false },
+    { IconType::Ufo, false },
+    { IconType::Wave, false },
+    { IconType::Robot, false },
+    { IconType::Spider, false },
+    { IconType::Swing, false },
+    { IconType::Jetpack, false }
+};
+
 IBLeaderboardLayer* IBLeaderboardLayer::create() {
     auto ret = new IBLeaderboardLayer();
     if (ret->init()) {
@@ -144,8 +156,8 @@ void IBLeaderboardLayer::updateList() {
                 rankMap.emplace_back(accountID, 0);
                 it = rankMap.end() - 1;
             }
-            for (auto id : icons[type]) {
-                it->second++;
+            if (icons.contains(type)) {
+                it->second += icons[type].size();
             }
         }
     }

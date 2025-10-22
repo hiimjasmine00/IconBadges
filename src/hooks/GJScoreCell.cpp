@@ -9,7 +9,7 @@ using namespace geode::prelude;
 class $modify(IBScoreCell, GJScoreCell) {
     static void onModify(ModifyBase<ModifyDerive<IBScoreCell, GJScoreCell>>& self) {
         for (auto& hook : std::views::values(self.m_hooks)) {
-            hook->setAutoEnable(IconBadges::enabled());
+            hook->setAutoEnable(IconBadges::enabled);
         }
     }
 
@@ -65,8 +65,8 @@ class $modify(IBScoreCell, GJScoreCell) {
     }
 
     void onIcon(CCObject* sender) {
-        if (auto it = IconBadges::badges.find(m_score->m_accountID); it != IconBadges::badges.end()) {
-            IBBadgePopup::create(m_score, it->second)->show();
+        if (IconBadges::badges.contains(m_score->m_accountID)) {
+            IBBadgePopup::create(m_score)->show();
         }
     }
 };

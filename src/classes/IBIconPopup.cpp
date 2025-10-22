@@ -1,17 +1,17 @@
 #include "IBIconPopup.hpp"
+#include "../IconBadges.hpp"
 #include <Geode/binding/GameManager.hpp>
 #include <Geode/binding/GJItemIcon.hpp>
 #include <Geode/binding/GJSpiderSprite.hpp>
 #include <Geode/binding/GJUserScore.hpp>
 #include <Geode/binding/ItemInfoPopup.hpp>
 #include <Geode/binding/SimplePlayer.hpp>
-#include <Geode/loader/Loader.hpp>
 
 using namespace geode::prelude;
 
-IBIconPopup* IBIconPopup::create(GJUserScore* score, IconType type, const std::vector<int>& ids) {
+IBIconPopup* IBIconPopup::create(GJUserScore* score, IconType type) {
     auto ret = new IBIconPopup();
-    if (ret->initAnchored(300.0f, 250.0f, score, type, ids)) {
+    if (ret->initAnchored(300.0f, 250.0f, score, type)) {
         ret->autorelease();
         return ret;
     }
@@ -19,8 +19,10 @@ IBIconPopup* IBIconPopup::create(GJUserScore* score, IconType type, const std::v
     return nullptr;
 }
 
-bool IBIconPopup::setup(GJUserScore* score, IconType type, const std::vector<int>& ids) {
+bool IBIconPopup::setup(GJUserScore* score, IconType type) {
     constexpr std::array iconNames = { "Cube", "Ship", "Ball", "UFO", "Wave", "Robot", "Spider", "Swing", "Jetpack" };
+
+    auto& ids = IconBadges::badges[score->m_accountID][type];
     auto size = ids.size();
 
     setID("IBIconPopup");
@@ -33,7 +35,7 @@ bool IBIconPopup::setup(GJUserScore* score, IconType type, const std::vector<int
     m_noElasticity = true;
 
     m_simplePlayers = CCArray::create();
-    m_ids = { ids.begin(), ids.end() };
+    m_ids = ids;
     m_iconType = type;
 
     auto iconBackground = CCScale9Sprite::create("square02_001.png", { 0.0f, 0.0f, 80.0f, 80.0f });
@@ -45,24 +47,31 @@ bool IBIconPopup::setup(GJUserScore* score, IconType type, const std::vector<int
 
     auto playerSquare = CCSpriteFrameCache::get()->spriteFrameByName("playerSquare_001.png");
     auto originalSize = playerSquare ? playerSquare->getOriginalSize() : CCSize { 0.0f, 0.0f };
+    auto center = originalSize / 2.0f;
     auto gameManager = GameManager::get();
     auto unlockType = gameManager->iconTypeToUnlockType(type);
+    auto color1 = gameManager->colorForIdx(score->m_color1);
+    auto color2 = gameManager->colorForIdx(score->m_color2);
+    auto color3 = gameManager->colorForIdx(score->m_color3);
+    auto glow = score->m_glowEnabled;
     auto scale = GJItemIcon::scaleForType(unlockType) * 1.2f;
-    auto loader = Loader::get();
     auto count = std::min<int>(size, 30);
     for (int i = 0; i < count; i++) {
         auto simplePlayer = SimplePlayer::create(1);
-        simplePlayer->setColor(gameManager->colorForIdx(score->m_color1));
-        simplePlayer->setSecondColor(gameManager->colorForIdx(score->m_color2));
-        simplePlayer->enableCustomGlowColor(gameManager->colorForIdx(score->m_color3));
-        simplePlayer->m_hasGlowOutline = score->m_glowEnabled;
+        simplePlayer->updatePlayerFrame(1, type);
+        simplePlayer->setColor(color1);
+        simplePlayer->setSecondColor(color2);
+        simplePlayer->enableCustomGlowColor(color3);
+        simplePlayer->m_hasGlowOutline = glow;
         simplePlayer->updateColors();
         simplePlayer->setScale(scale);
-        simplePlayer->setContentSize(originalSize);
+
         auto iconButton = CCMenuItemExt::createSpriteExtra(simplePlayer, [unlockType](CCMenuItemSpriteExtra* sender) {
             ItemInfoPopup::create(sender->getTag(), unlockType)->show();
         });
         iconButton->setPosition({ 50.0f + (i % 6) * 40.0f, 195.0f - (int)(i / 6) * 40.0f });
+        simplePlayer->setPosition(center);
+        iconButton->setContentSize(originalSize);
         iconButton->setID(fmt::format("icon-{}", i));
         m_simplePlayers->addObject(simplePlayer);
         m_buttonMenu->addChild(iconButton);
@@ -97,7 +106,7 @@ void IBIconPopup::loadPage(int page) {
     auto pages = (size + 29) / 30;
     if (pages == 0) return;
 
-    m_page = std::min(std::max(pages > 0 ? (pages + (page % pages)) % pages : 0, 0), pages - 1);
+    m_page = std::clamp(pages > 0 ? (pages + (page % pages)) % pages : 0, 0, pages - 1);
     auto index = m_page * 30;
     if (size <= index) return;
 
@@ -112,11 +121,6 @@ void IBIconPopup::loadPage(int page) {
             auto id = pageSpan[i];
             playerButton->setTag(id);
             simplePlayer->updatePlayerFrame(id, m_iconType);
-            simplePlayer->updateColors();
-            auto center = simplePlayer->getContentSize() / 2.0f;
-            if (auto firstLayer = simplePlayer->m_firstLayer) firstLayer->setPosition(center + firstLayer->getPosition());
-            if (auto robotSprite = simplePlayer->m_robotSprite) robotSprite->setPosition(center + robotSprite->getPosition());
-            if (auto spiderSprite = simplePlayer->m_spiderSprite) spiderSprite->setPosition(center + spiderSprite->getPosition());
         }
     }
 }

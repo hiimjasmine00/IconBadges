@@ -1,8 +1,8 @@
 #include <Geode/ui/Popup.hpp>
 
-class IBBadgePopup : public geode::Popup<GJUserScore*, const std::map<IconType, std::vector<int>>&> {
+class IBBadgePopup : public geode::Popup<GJUserScore*> {
 protected:
-    bool setup(GJUserScore*, const std::map<IconType, std::vector<int>>&) override;
+    bool setup(GJUserScore*) override;
 public:
-    static IBBadgePopup* create(GJUserScore*, const std::map<IconType, std::vector<int>>&);
+    static IBBadgePopup* create(GJUserScore*);
 };
