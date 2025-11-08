@@ -2,7 +2,7 @@
 #include "../classes/IBBadgePopup.hpp"
 #include <Geode/binding/GJUserScore.hpp>
 #include <Geode/modify/ProfilePage.hpp>
-#include <ranges>
+#include <jasmine/hook.hpp>
 
 using namespace geode::prelude;
 
@@ -12,9 +12,7 @@ class $modify(IBProfilePage, ProfilePage) {
     };
 
     static void onModify(ModifyBase<ModifyDerive<IBProfilePage, ProfilePage>>& self) {
-        for (auto& hook : std::views::values(self.m_hooks)) {
-            hook->setAutoEnable(IconBadges::enabled);
-        }
+        jasmine::hook::get(self.m_hooks, "ProfilePage::loadPageFromUserInfo", IconBadges::enabled);
     }
 
     void loadPageFromUserInfo(GJUserScore* score) {

@@ -143,15 +143,11 @@ void IBLeaderboardLayer::updateList() {
     }
 
     std::vector<std::pair<int, int>> rankMap;
-    auto enabledOverride = std::ranges::all_of(typesEnabled, [](const std::pair<IconType, bool>& pair) {
-        return !pair.second;
-    });
+    auto enabledOverride = std::ranges::all_of(typesEnabled, std::not_fn(std::identity()), &std::pair<const IconType, bool>::second);
     for (auto& [type, enabled] : typesEnabled) {
         if (!enabled && !enabledOverride) continue;
         for (auto& [accountID, icons] : IconBadges::badges) {
-            auto it = std::ranges::find_if(rankMap, [accountID](const std::pair<int, int>& pair) {
-                return pair.first == accountID;
-            });
+            auto it = std::ranges::find(rankMap, accountID, &std::pair<int, int>::first);
             if (it == rankMap.end()) {
                 rankMap.emplace_back(accountID, 0);
                 it = rankMap.end() - 1;
@@ -161,9 +157,7 @@ void IBLeaderboardLayer::updateList() {
             }
         }
     }
-    std::ranges::sort(rankMap, [](const std::pair<int, int>& a, const std::pair<int, int>& b) {
-        return a.second > b.second;
-    });
+    std::ranges::sort(rankMap, std::greater(), &std::pair<int, int>::second);
 
     auto scores = CCArray::create();
     auto glm = GameLevelManager::get();

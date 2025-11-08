@@ -2,15 +2,13 @@
 #include "../classes/IBBadgePopup.hpp"
 #include <Geode/binding/GJUserScore.hpp>
 #include <Geode/modify/GJScoreCell.hpp>
-#include <ranges>
+#include <jasmine/hook.hpp>
 
 using namespace geode::prelude;
 
 class $modify(IBScoreCell, GJScoreCell) {
     static void onModify(ModifyBase<ModifyDerive<IBScoreCell, GJScoreCell>>& self) {
-        for (auto& hook : std::views::values(self.m_hooks)) {
-            hook->setAutoEnable(IconBadges::enabled);
-        }
+        jasmine::hook::get(self.m_hooks, "GJScoreCell::loadFromScore", IconBadges::enabled);
     }
 
     void loadFromScore(GJUserScore* score) {
