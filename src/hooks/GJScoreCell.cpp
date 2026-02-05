@@ -17,6 +17,29 @@ class $modify(IBScoreCell, GJScoreCell) {
         auto iconCount = static_cast<CCString*>(score->getUserObject("icon-count"_spr));
         if (!iconCount) return;
 
+        std::string_view starsLabelID = "stars-label";
+        std::string_view starsIconID = "stars-icon";
+        std::string_view moonsLabelID = "moons-label";
+        std::string_view moonsIconID = "moons-icon";
+        switch (score->m_leaderboardStat) {
+            case LeaderboardStat::Moons:
+                starsLabelID = "moons-label";
+                starsIconID = "moons-icon";
+                moonsLabelID = "stars-label";
+                moonsIconID = "stars-icon";
+                break;
+            case LeaderboardStat::Demons:
+                starsLabelID = "demons-label";
+                starsIconID = "demons-icon";
+                break;
+            case LeaderboardStat::UserCoins:
+                starsLabelID = "user-coins-label";
+                starsIconID = "user-coins-icon";
+                break;
+            default:
+                break;
+        }
+
         CCNode* playerIcon = nullptr;
         CCNode* mainMenu = nullptr;
         CCNode* starsLabel = nullptr;
@@ -24,13 +47,13 @@ class $modify(IBScoreCell, GJScoreCell) {
         CCNode* moonsLabel = nullptr;
         CCNode* moonsIcon = nullptr;
         for (auto child : CCArrayExt<CCNode*>(m_mainLayer->getChildren())) {
-            auto& id = child->getID();
+            auto id = child->getID();
             if (id == "player-icon") playerIcon = child;
             else if (id == "main-menu") mainMenu = child;
-            else if (id == "stars-label") starsLabel = child;
-            else if (id == "stars-icon") starsIcon = child;
-            else if (id == "moons-label") moonsLabel = child;
-            else if (id == "moons-icon") moonsIcon = child;
+            else if (id == starsLabelID) starsLabel = child;
+            else if (id == starsIconID) starsIcon = child;
+            else if (id == moonsLabelID) moonsLabel = child;
+            else if (id == moonsIconID) moonsIcon = child;
         }
         if (!playerIcon || !mainMenu || !starsLabel || !starsIcon || !moonsLabel || !moonsIcon) return;
 

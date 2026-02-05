@@ -1,8 +1,8 @@
 #include <Geode/ui/Popup.hpp>
 
-class IBBadgePopup : public geode::Popup<GJUserScore*> {
+class IBBadgePopup : public geode::Popup {
 protected:
-    bool setup(GJUserScore*) override;
+    bool init(GJUserScore*);
 public:
     static IBBadgePopup* create(GJUserScore*);
 };

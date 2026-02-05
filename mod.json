@@ -1,26 +1,18 @@
 {
-    "geode": "4.9.0",
+    "geode": "5.0.0-alpha.1",
     "gd": {
-        "win": "2.2074",
-        "android": "2.2074",
-        "mac": "2.2074",
-        "ios": "2.2074"
+        "win": "2.2081",
+        "android": "2.2081",
+        "mac": "2.2081",
+        "ios": "2.2081"
     },
     "id": "hiimjasmine00.icon_badges",
     "name": "Icon Badges",
-    "version": "v1.0.2",
+    "version": "v1.0.3-beta.1",
     "developer": "hiimjasmine00",
     "description": "Gives badges to icon designers.",
     "dependencies": {
-        "geode.node-ids": ">=v1.12.0",
-        "jouca.badgesapi": {
-            "version": ">=v1.2.0",
-            "importance": "recommended"
-        },
-        "km7dev.server_api": {
-            "version": ">=v2.0.0",
-            "importance": "suggested"
-        }
+        "geode.node-ids": ">=v1.12.0"
     },
     "resources": {
         "sprites": [

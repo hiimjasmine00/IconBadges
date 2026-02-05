@@ -6,12 +6,13 @@
 #include <Geode/binding/GJUserScore.hpp>
 #include <Geode/binding/ItemInfoPopup.hpp>
 #include <Geode/binding/SimplePlayer.hpp>
+#include <jasmine/string.hpp>
 
 using namespace geode::prelude;
 
 IBIconPopup* IBIconPopup::create(GJUserScore* score, IconType type) {
     auto ret = new IBIconPopup();
-    if (ret->initAnchored(300.0f, 250.0f, score, type)) {
+    if (ret->init(score, type)) {
         ret->autorelease();
         return ret;
     }
@@ -19,14 +20,16 @@ IBIconPopup* IBIconPopup::create(GJUserScore* score, IconType type) {
     return nullptr;
 }
 
-bool IBIconPopup::setup(GJUserScore* score, IconType type) {
+bool IBIconPopup::init(GJUserScore* score, IconType type) {
+    if (!Popup::init(300.0f, 250.0f)) return false;
+
     constexpr std::array iconNames = { "Cube", "Ship", "Ball", "UFO", "Wave", "Robot", "Spider", "Swing", "Jetpack" };
 
     auto& ids = IconBadges::badges[score->m_accountID][type];
     auto size = ids.size();
 
     setID("IBIconPopup");
-    setTitle(fmt::format("{}'s {} {}{}", GEODE_ANDROID(std::string)(score->m_userName), size, iconNames[(int)type], size == 1 ? "" : "s"));
+    setTitle(fmt::format("{}'s {} {}{}", JASMINE_STRING(score->m_userName), size, iconNames[(int)type], size == 1 ? "" : "s"));
     m_title->setID("icons-title");
     m_mainLayer->setID("main-layer");
     m_buttonMenu->setID("button-menu");
@@ -125,10 +128,10 @@ void IBIconPopup::loadPage(int page) {
     }
 }
 
-void IBIconPopup::keyDown(enumKeyCodes key) {
+void IBIconPopup::keyDown(enumKeyCodes key, double timestamp) {
     switch (key) {
         case KEY_Left: case CONTROLLER_Left: return loadPage(m_page - 1);
         case KEY_Right: case CONTROLLER_Right: return loadPage(m_page + 1);
-        default: return Popup::keyDown(key);
+        default: return Popup::keyDown(key, timestamp);
     }
 }

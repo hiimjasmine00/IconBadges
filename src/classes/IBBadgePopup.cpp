@@ -2,12 +2,13 @@
 #include "IBIconPopup.hpp"
 #include "../IconBadges.hpp"
 #include <Geode/binding/GJUserScore.hpp>
+#include <jasmine/string.hpp>
 
 using namespace geode::prelude;
 
 IBBadgePopup* IBBadgePopup::create(GJUserScore* score) {
     auto ret = new IBBadgePopup();
-    if (ret->initAnchored(300.0f, 70.0f, score)) {
+    if (ret->init(score)) {
         ret->autorelease();
         return ret;
     }
@@ -15,9 +16,11 @@ IBBadgePopup* IBBadgePopup::create(GJUserScore* score) {
     return nullptr;
 }
 
-bool IBBadgePopup::setup(GJUserScore* score) {
+bool IBBadgePopup::init(GJUserScore* score) {
+    if (!Popup::init(300.0f, 70.0f)) return false;
+
     setID("IBBadgePopup");
-    setTitle(fmt::format("{}'s Badges", GEODE_ANDROID(std::string)(score->m_userName)), "goldFont.fnt", 0.7f, 15.0f);
+    setTitle(fmt::format("{}'s Badges", JASMINE_STRING(score->m_userName)), "goldFont.fnt", 0.7f, 15.0f);
     m_title->setID("badges-title");
     m_mainLayer->setID("main-layer");
     m_buttonMenu->setID("button-menu");
