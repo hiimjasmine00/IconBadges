@@ -3,7 +3,7 @@
 
 class IBIconPopup : public geode::Popup {
 protected:
-    geode::Ref<cocos2d::CCArray> m_simplePlayers;
+    std::vector<SimplePlayer*> m_simplePlayers;
     std::span<const int> m_ids;
     IconType m_iconType;
     int m_page;

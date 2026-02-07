@@ -37,11 +37,10 @@ bool IBIconPopup::init(GJUserScore* score, IconType type) {
     m_closeBtn->setID("close-button");
     m_noElasticity = true;
 
-    m_simplePlayers = CCArray::create();
     m_ids = ids;
     m_iconType = type;
 
-    auto iconBackground = CCScale9Sprite::create("square02_001.png", { 0.0f, 0.0f, 80.0f, 80.0f });
+    auto iconBackground = NineSlice::create("square02_001.png", { 0.0f, 0.0f, 80.0f, 80.0f });
     iconBackground->setPosition({ 150.0f, 115.0f });
     iconBackground->setContentSize({ 270.0f, 200.0f });
     iconBackground->setOpacity(105);
@@ -76,7 +75,7 @@ bool IBIconPopup::init(GJUserScore* score, IconType type) {
         simplePlayer->setPosition(center);
         iconButton->setContentSize(originalSize);
         iconButton->setID(fmt::format("icon-{}", i));
-        m_simplePlayers->addObject(simplePlayer);
+        m_simplePlayers.push_back(simplePlayer);
         m_buttonMenu->addChild(iconButton);
     }
 
@@ -113,10 +112,10 @@ void IBIconPopup::loadPage(int page) {
     auto index = m_page * 30;
     if (size <= index) return;
 
-    auto count = m_simplePlayers->count();
+    auto count = m_simplePlayers.size();
     auto pageSpan = m_ids.subspan(index, std::min<int>(30, size - index));
     for (int i = 0; i < count; i++) {
-        auto simplePlayer = static_cast<SimplePlayer*>(m_simplePlayers->objectAtIndex(i));
+        auto simplePlayer = m_simplePlayers[i];
         auto playerButton = simplePlayer->getParent();
         auto visible = i < pageSpan.size();
         playerButton->setVisible(visible);
