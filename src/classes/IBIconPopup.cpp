@@ -37,6 +37,8 @@ bool IBIconPopup::init(GJUserScore* score, IconType type) {
     m_closeBtn->setID("close-button");
     m_noElasticity = true;
 
+    auto count = std::min(30uz, size);
+    m_simplePlayers.reserve(count);
     m_ids = ids;
     m_iconType = type;
 
@@ -57,7 +59,6 @@ bool IBIconPopup::init(GJUserScore* score, IconType type) {
     auto color3 = gameManager->colorForIdx(score->m_color3);
     auto glow = score->m_glowEnabled;
     auto scale = GJItemIcon::scaleForType(unlockType) * 1.2f;
-    auto count = std::min<int>(size, 30);
     for (int i = 0; i < count; i++) {
         auto simplePlayer = SimplePlayer::create(1);
         simplePlayer->updatePlayerFrame(1, type);
