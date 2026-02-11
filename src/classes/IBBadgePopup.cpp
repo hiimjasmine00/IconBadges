@@ -28,6 +28,8 @@ bool IBBadgePopup::init(GJUserScore* score) {
     m_closeBtn->setID("close-button");
     m_noElasticity = true;
 
+    m_score = score;
+
     auto badgeMenu = CCMenu::create();
     badgeMenu->setPosition({ 150.0f, 25.0f });
     badgeMenu->setContentSize({ 300.0f, 25.0f });
