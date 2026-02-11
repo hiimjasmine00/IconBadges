@@ -75,18 +75,16 @@ bool IBLeaderboardLayer::init() {
     buttonMenu->setID("back-menu");
     addChild(buttonMenu);
 
-    auto backButton = CCMenuItemExt::createSpriteExtraWithFrameName("GJ_arrow_01_001.png", 1.0f, [this](auto) {
-        close();
-    });
+    auto backButton = CCMenuItemSpriteExtra::create(
+        CCSprite::createWithSpriteFrameName("GJ_arrow_01_001.png"), this, menu_selector(IBLeaderboardLayer::onClose)
+    );
     backButton->setPosition({ 24.0f, winSize.height - 23.0f });
     backButton->setID("back-button");
     buttonMenu->addChild(backButton);
 
     auto refreshBtnSpr = CCSprite::createWithSpriteFrameName("GJ_updateBtn_001.png");
     auto width = refreshBtnSpr->getTextureRect().size.width / 2.0f + 4.0f;
-    auto refreshButton = CCMenuItemExt::createSpriteExtra(refreshBtnSpr, [this](auto) {
-        updateList();
-    });
+    auto refreshButton = CCMenuItemSpriteExtra::create(refreshBtnSpr, this, menu_selector(IBLeaderboardLayer::onRefresh));
     refreshButton->setPosition({ winSize.width - width, width });
     refreshButton->setID("refresh-button");
     buttonMenu->addChild(refreshButton);
@@ -96,8 +94,6 @@ bool IBLeaderboardLayer::init() {
     m_listLayer->setPosition(center - CCPoint { 0.0f, 5.0f });
     m_listLayer->setID("list-layer");
     addChild(m_listLayer);
-
-    constexpr std::array badgeNames = { "icon", "ship", "ball", "bird", "dart", "robot", "spider", "swing", "jetpack" };
 
     auto badgeMenu = CCMenu::create();
     badgeMenu->setPosition(center + CCPoint { 230.0f, 15.0f });
@@ -111,17 +107,11 @@ bool IBLeaderboardLayer::init() {
     badgeMenu->setID("badge-menu");
 
     for (int i = 0; i < 9; i++) {
-        auto badgeName = badgeNames[i];
-        auto badgeButton = CCMenuItemExt::createSpriteExtraWithFrameName(
-            fmt::format("gj_{}Btn_{}_001.png", badgeName, typesEnabled[(IconType)i] ? "on" : "off"), 0.8f,
-            [this, badgeName](CCMenuItemSpriteExtra* sender) {
-                auto& typeEnabled = typesEnabled[(IconType)sender->getTag()];
-                typeEnabled = !typeEnabled;
-                static_cast<CCSprite*>(sender->getNormalImage())->setDisplayFrame(CCSpriteFrameCache::get()->spriteFrameByName(
-                    fmt::format("gj_{}Btn_{}_001.png", badgeName, typeEnabled ? "on" : "off").c_str()));
-                updateList();
-            }
-        );
+        auto badgeName = IconBadges::badgeNames[i];
+        auto badgeSprite = CCSprite::createWithSpriteFrameName(
+            fmt::format("gj_{}Btn_{}_001.png", badgeName, typesEnabled[(IconType)i] ? "on" : "off").c_str());
+        badgeSprite->setScale(0.8f);
+        auto badgeButton = CCMenuItemSpriteExtra::create(badgeSprite, this, menu_selector(IBLeaderboardLayer::onType));
         badgeButton->setTag(i);
         badgeButton->setID(fmt::format("{}-badge-button", badgeName));
         badgeMenu->addChild(badgeButton);
@@ -134,6 +124,22 @@ bool IBLeaderboardLayer::init() {
     updateList();
 
     return true;
+}
+
+void IBLeaderboardLayer::onRefresh(CCObject* sender) {
+    updateList();
+}
+
+void IBLeaderboardLayer::onType(CCObject* sender) {
+    auto tag = sender->getTag();
+    auto& typeEnabled = typesEnabled[(IconType)tag];
+    typeEnabled = !typeEnabled;
+    static_cast<CCSprite*>(static_cast<CCMenuItemSpriteExtra*>(sender)->getNormalImage())->setDisplayFrame(
+        CCSpriteFrameCache::get()->spriteFrameByName(
+            fmt::format("gj_{}Btn_{}_001.png", IconBadges::badgeNames[tag], typeEnabled ? "on" : "off").c_str()
+        )
+    );
+    updateList();
 }
 
 void IBLeaderboardLayer::updateList() {
@@ -197,10 +203,10 @@ void IBLeaderboardLayer::updateList() {
     }
 }
 
-void IBLeaderboardLayer::close() {
+void IBLeaderboardLayer::onClose(CCObject* sender) {
     CCDirector::get()->replaceScene(CCTransitionFade::create(0.5f, MenuLayer::scene(false)));
 }
 
 void IBLeaderboardLayer::keyBackClicked() {
-    close();
+    onClose(nullptr);
 }

@@ -8,7 +8,7 @@ using namespace geode::prelude;
 
 std::map<int, std::map<IconType, std::vector<int>>> IconBadges::badges;
 
-bool IconBadges::enabled = jasmine::gdps::isActive();
+bool IconBadges::enabled = !jasmine::gdps::isActive();
 
 $on_mod(Loaded) {
     if (!IconBadges::enabled) return;

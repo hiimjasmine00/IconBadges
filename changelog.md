@@ -1,5 +1,5 @@
 # Icon Badges Changelog
-## v1.0.3 (2026-02-06)
+## v1.0.3 (2026-02-11)
 - Ported to Geometry Dash v2.208 / Geode SDK v5.0.0
 
 ## v1.0.2 (2025-10-22)

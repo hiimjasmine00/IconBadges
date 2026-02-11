@@ -41,6 +41,7 @@ bool IBIconPopup::init(GJUserScore* score, IconType type) {
     m_simplePlayers.reserve(count);
     m_ids = ids;
     m_iconType = type;
+    m_unlockType = GameManager::get()->iconTypeToUnlockType(type);
 
     auto iconBackground = NineSlice::create("square02_001.png", { 0.0f, 0.0f, 80.0f, 80.0f });
     iconBackground->setPosition({ 150.0f, 115.0f });
@@ -53,12 +54,11 @@ bool IBIconPopup::init(GJUserScore* score, IconType type) {
     auto originalSize = playerSquare ? playerSquare->getOriginalSize() : CCSize { 0.0f, 0.0f };
     auto center = originalSize / 2.0f;
     auto gameManager = GameManager::get();
-    auto unlockType = gameManager->iconTypeToUnlockType(type);
     auto color1 = gameManager->colorForIdx(score->m_color1);
     auto color2 = gameManager->colorForIdx(score->m_color2);
     auto color3 = gameManager->colorForIdx(score->m_color3);
     auto glow = score->m_glowEnabled;
-    auto scale = GJItemIcon::scaleForType(unlockType) * 1.2f;
+    auto scale = GJItemIcon::scaleForType(m_unlockType) * 1.2f;
     for (int i = 0; i < count; i++) {
         auto simplePlayer = SimplePlayer::create(1);
         simplePlayer->updatePlayerFrame(1, type);
@@ -69,9 +69,7 @@ bool IBIconPopup::init(GJUserScore* score, IconType type) {
         simplePlayer->updateColors();
         simplePlayer->setScale(scale);
 
-        auto iconButton = CCMenuItemExt::createSpriteExtra(simplePlayer, [unlockType](CCMenuItemSpriteExtra* sender) {
-            ItemInfoPopup::create(sender->getTag(), unlockType)->show();
-        });
+        auto iconButton = CCMenuItemSpriteExtra::create(simplePlayer, this, menu_selector(IBIconPopup::onIcon));
         iconButton->setPosition({ 50.0f + (i % 6) * 40.0f, 195.0f - (int)(i / 6) * 40.0f });
         simplePlayer->setPosition(center);
         iconButton->setContentSize(originalSize);
@@ -81,18 +79,15 @@ bool IBIconPopup::init(GJUserScore* score, IconType type) {
     }
 
     if (size > count) {
-        auto prevButton = CCMenuItemExt::createSpriteExtraWithFrameName("GJ_arrow_01_001.png", 1.0f, [this](auto) {
-            loadPage(m_page - 1);
-        });
+        auto prevButtonSprite = CCSprite::createWithSpriteFrameName("GJ_arrow_01_001.png");
+        auto prevButton = CCMenuItemSpriteExtra::create(prevButtonSprite, this, menu_selector(IBIconPopup::onPrevPage));
         prevButton->setPosition({ -25.0f, 125.0f });
         prevButton->setID("prev-button");
         m_buttonMenu->addChild(prevButton);
 
         auto nextButtonSprite = CCSprite::createWithSpriteFrameName("GJ_arrow_01_001.png");
         nextButtonSprite->setFlipX(true);
-        auto nextButton = CCMenuItemExt::createSpriteExtra(nextButtonSprite, [this](auto) {
-            loadPage(m_page + 1);
-        });
+        auto nextButton = CCMenuItemSpriteExtra::create(nextButtonSprite, this, menu_selector(IBIconPopup::onNextPage));
         nextButton->setPosition({ 325.0f, 125.0f });
         nextButton->setID("next-button");
         m_buttonMenu->addChild(nextButton);
@@ -102,6 +97,18 @@ bool IBIconPopup::init(GJUserScore* score, IconType type) {
     setKeyboardEnabled(true);
 
     return true;
+}
+
+void IBIconPopup::onPrevPage(CCObject* sender) {
+    loadPage(m_page - 1);
+}
+
+void IBIconPopup::onNextPage(CCObject* sender) {
+    loadPage(m_page + 1);
+}
+
+void IBIconPopup::onIcon(CCObject* sender) {
+    ItemInfoPopup::create(sender->getTag(), m_unlockType)->show();
 }
 
 void IBIconPopup::loadPage(int page) {

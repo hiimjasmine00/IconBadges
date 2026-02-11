@@ -7,8 +7,10 @@ protected:
     GJListLayer* m_listLayer;
 
     bool init() override;
+    void onRefresh(cocos2d::CCObject*);
+    void onType(cocos2d::CCObject*);
     void updateList();
-    void close();
+    void onClose(cocos2d::CCObject*);
 public:
     static IBLeaderboardLayer* create();
     static cocos2d::CCScene* scene();

@@ -28,8 +28,6 @@ bool IBBadgePopup::init(GJUserScore* score) {
     m_closeBtn->setID("close-button");
     m_noElasticity = true;
 
-    constexpr std::array badgeNames = { "icon", "ship", "ball", "bird", "dart", "robot", "spider", "swing", "jetpack" };
-
     auto badgeMenu = CCMenu::create();
     badgeMenu->setPosition({ 150.0f, 25.0f });
     badgeMenu->setContentSize({ 300.0f, 25.0f });
@@ -38,12 +36,11 @@ bool IBBadgePopup::init(GJUserScore* score) {
 
     for (auto& [type, ids] : IconBadges::badges[score->m_accountID]) {
         if (ids.empty()) continue;
-        auto badgeName = badgeNames[(int)type];
-        auto badgeButton = CCMenuItemExt::createSpriteExtraWithFrameName(fmt::format("gj_{}Btn_on_001.png", badgeName), 0.7f, [
-            scoreRef = WeakRef(score), type
-        ](auto) {
-            if (auto score = scoreRef.lock()) IBIconPopup::create(score, type)->show();
-        });
+        auto badgeName = IconBadges::badgeNames[(int)type];
+        auto badgeSprite = CCSprite::createWithSpriteFrameName(fmt::format("gj_{}Btn_on_001.png", badgeName).c_str());
+        badgeSprite->setScale(0.7f);
+        auto badgeButton = CCMenuItemSpriteExtra::create(badgeSprite, this, menu_selector(IBBadgePopup::onBadge));
+        badgeButton->setTag((int)type);
         badgeButton->setID(fmt::format("{}-badge-button", badgeName));
         badgeMenu->addChild(badgeButton);
     }
@@ -52,4 +49,8 @@ bool IBBadgePopup::init(GJUserScore* score) {
     m_mainLayer->addChild(badgeMenu);
 
     return true;
+}
+
+void IBBadgePopup::onBadge(CCObject* sender) {
+    IBIconPopup::create(m_score, (IconType)sender->getTag())->show();
 }
