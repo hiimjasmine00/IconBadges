@@ -1,5 +1,5 @@
 {
-    "geode": "5.0.0-alpha.2",
+    "geode": "5.0.0-beta.1",
     "gd": {
         "win": "2.2081",
         "android": "2.2081",
@@ -8,7 +8,7 @@
     },
     "id": "hiimjasmine00.icon_badges",
     "name": "Icon Badges",
-    "version": "v1.0.3-beta.1",
+    "version": "v1.0.3",
     "developer": "hiimjasmine00",
     "description": "Gives badges to icon designers.",
     "dependencies": {
