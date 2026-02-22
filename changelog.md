@@ -1,4 +1,7 @@
 # Icon Badges Changelog
+## v1.0.4 (2026-02-22)
+- Fixed GDPS validation on Android
+
 ## v1.0.3 (2026-02-14)
 - Ported to Geometry Dash v2.208 / Geode SDK v5.0.0
 
